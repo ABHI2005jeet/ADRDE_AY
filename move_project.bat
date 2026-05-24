@@ -1,0 +1,9 @@
+@echo off
+echo Moving project to C:\ADRDE_AY...
+robocopy "C:\Users\Abhij\OneDrive\Desktop\ADRDE_AGENDA_MAC_MEETING" "C:\ADRDE_AY" /E /MOVE 
+echo Opening VS Code...
+code C:\ADRDE_AY
+cd /d C:\ADRDE_AY
+echo Starting Dev Server...
+start cmd /k "npm run dev"
+exit

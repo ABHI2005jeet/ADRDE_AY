@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1e3a8a; /* blue-900 */
+  --color-primary-light: #2563eb; /* blue-600 */
+  --color-primary-dark: #1e40af; /* blue-800 */
+  --color-secondary: #f3f4f6; /* gray-100 */
+  --color-secondary-dark: #1f2937; /* gray-800 */
+
+  --bg-color-light: #f8fafc; /* slate-50 */
+  --bg-color-dark: #0f172a; /* slate-900 */
+
+  --card-bg-light: #ffffff;
+  --card-bg-dark: #1e293b; /* slate-800 */
+  
+  --text-main-light: #0f172a; /* slate-900 */
+  --text-main-dark: #f8fafc; /* slate-50 */
+  
+  --text-muted-light: #64748b; /* slate-500 */
+  --text-muted-dark: #94a3b8; /* slate-400 */
+  
+  --border-light: #e2e8f0; /* slate-200 */
+  --border-dark: #334155; /* slate-700 */
+}
+
+@layer base {
+  :root {
+    --bg-main: var(--bg-color-light);
+    --bg-card: var(--card-bg-light);
+    --text-main: var(--text-main-light);
+    --text-muted: var(--text-muted-light);
+    --border-color: var(--border-light);
+  }
+
+  .dark {
+    --bg-main: var(--bg-color-dark);
+    --bg-card: var(--card-bg-dark);
+    --text-main: var(--text-main-dark);
+    --text-muted: var(--text-muted-dark);
+    --border-color: var(--border-dark);
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  }
+  .dark .card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  }
+}
