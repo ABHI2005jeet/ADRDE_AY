@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { Card, CardContent } from '../components/ui/Card';
@@ -7,25 +7,28 @@ import { Button } from '../components/ui/Button';
 import { Moon, Sun, Shield } from 'lucide-react';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('Admin');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (!username || !password) {
+    if (!email || !password) {
       setError('Please fill in all fields.');
       return;
     }
-    const success = login(username, password, role);
-    if (success) {
+    setIsLoading(true);
+    const result = await login(email, password);
+    setIsLoading(false);
+    
+    if (result.success) {
       navigate('/dashboard');
     } else {
-      setError('Invalid credentials.');
+      setError(result.message || 'Invalid credentials.');
     }
   };
 
@@ -59,18 +62,21 @@ const Login = () => {
               )}
               
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[var(--text-main)]">Employee ID / Username</label>
+                <label className="text-sm font-medium text-[var(--text-main)]">Email Address</label>
                 <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-[var(--text-main)] placeholder-[var(--text-muted)] transition-colors"
-                  placeholder="Enter your ID"
+                  placeholder="Enter your email"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[var(--text-main)]">Password</label>
+                <div className="flex justify-between">
+                  <label className="text-sm font-medium text-[var(--text-main)]">Password</label>
+                  <Link to="/forgot-password" className="text-sm text-[var(--color-primary-light)] hover:underline">Forgot password?</Link>
+                </div>
                 <input
                   type="password"
                   value={password}
@@ -80,23 +86,13 @@ const Login = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-[var(--text-main)]">Access Role</label>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-4 py-2 bg-[var(--bg-main)] border border-[var(--border-color)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-[var(--text-main)] transition-colors"
-                >
-                  <option value="Admin">Admin</option>
-                  <option value="Para Head">Para Head</option>
-                  <option value="Staff">Staff</option>
-                  <option value="Employee">Employee</option>
-                </select>
-              </div>
-
-              <Button type="submit" className="w-full h-12 text-base">
-                Sign In
+              <Button type="submit" className="w-full h-12 text-base" disabled={isLoading}>
+                {isLoading ? 'Signing In...' : 'Sign In'}
               </Button>
+              
+              <div className="text-center text-sm text-[var(--text-muted)] pt-2">
+                Don't have an account? <Link to="/register" className="text-[var(--color-primary-light)] hover:underline font-medium">Register here</Link>
+              </div>
             </form>
           </CardContent>
         </Card>

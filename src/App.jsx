@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Meetings from './pages/Meetings';
 import Agendas from './pages/Agendas';
@@ -9,6 +10,8 @@ import CalendarView from './pages/CalendarView';
 import Timeline from './pages/Timeline';
 import Documents from './pages/Documents';
 import Profile from './pages/Profile';
+
+import Inbox from './pages/Inbox';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -22,6 +25,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route
         path="/"
         element={
@@ -38,6 +42,7 @@ function App() {
         <Route path="timeline" element={<Timeline />} />
         <Route path="documents" element={<Documents />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="inbox" element={<Inbox />} />
       </Route>
     </Routes>
   );

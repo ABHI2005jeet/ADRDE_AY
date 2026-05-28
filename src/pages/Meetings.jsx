@@ -1,19 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
-import { mockMeetings } from '../mockData/meetings';
 import { Plus, Search, Calendar, MapPin, Clock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getMeetings } from '../services/dataService';
 
 const Meetings = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const canCreate = user?.role === 'Admin';
+  const [meetings, setMeetings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Can create if Staff or Admin
+  const canCreate = user?.role === 'Admin' || user?.role === 'Staff';
 
-  const filteredMeetings = mockMeetings.filter(m => 
-    m.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    m.id.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        const data = await getMeetings();
+        setMeetings(data);
+      } catch (error) {
+        console.error('Failed to fetch meetings', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMeetings();
+  }, []);
+
+  const filteredMeetings = meetings.filter(m => 
+    m.title?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    m._id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -49,12 +67,16 @@ const Meetings = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filteredMeetings.map(meeting => (
-              <Card key={meeting.id} className="hover:border-[var(--color-primary-light)] transition-colors cursor-pointer group">
+            {loading ? (
+              <div className="col-span-full py-8 text-center text-[var(--text-muted)]">Loading meetings...</div>
+            ) : filteredMeetings.length === 0 ? (
+              <div className="col-span-full py-8 text-center text-[var(--text-muted)]">No meetings found.</div>
+            ) : filteredMeetings.map(meeting => (
+              <Card key={meeting._id} className="hover:border-[var(--color-primary-light)] transition-colors cursor-pointer group">
                 <CardContent className="p-5">
                   <div className="flex justify-between items-start mb-3">
                     <span className="text-xs font-semibold text-[var(--color-primary-light)] bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
-                      {meeting.id}
+                      {meeting._id.substring(0, 8).toUpperCase()}
                     </span>
                     <Badge variant={meeting.status === 'Completed' ? 'success' : 'primary'}>
                       {meeting.status}
@@ -72,7 +94,7 @@ const Meetings = () => {
                   <div className="space-y-2 text-sm text-[var(--text-muted)]">
                     <div className="flex items-center gap-2">
                       <Calendar size={16} />
-                      <span>{meeting.date}</span>
+                      <span>{new Date(meeting.date).toLocaleDateString()}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock size={16} />

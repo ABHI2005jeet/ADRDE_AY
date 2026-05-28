@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
-import { mockDocuments } from '../mockData/documents';
 import { FileUp, File, FileText, Download, Eye, FileSpreadsheet, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getDocuments } from '../services/dataService';
 
 const getFileIcon = (type) => {
   switch(type) {
@@ -17,8 +17,24 @@ const getFileIcon = (type) => {
 
 const Documents = () => {
   const { user } = useAuth();
-  const canUpload = user?.role === 'Admin';
+  const canUpload = user?.role === 'Admin' || user?.role === 'Scientist';
   const [downloadMsg, setDownloadMsg] = useState('');
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDocs = async () => {
+      try {
+        const data = await getDocuments();
+        setDocuments(data);
+      } catch (error) {
+        console.error('Failed to fetch documents', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDocs();
+  }, []);
 
   const handleDownload = (filename) => {
     setDownloadMsg(`Mock Download: ${filename} is being generated and saved...`);
@@ -68,14 +84,20 @@ const Documents = () => {
                 </tr>
               </thead>
               <tbody>
-                {mockDocuments.map((doc) => (
-                  <tr key={doc.id} className="border-b border-[var(--border-color)] hover:bg-[var(--bg-main)] transition-colors">
-                    <td className="p-4">{getFileIcon(doc.type)}</td>
-                    <td className="p-4 font-medium text-[var(--text-main)]">{doc.name}</td>
-                    <td className="p-4 text-sm text-[var(--text-muted)]">{doc.uploadDate}</td>
-                    <td className="p-4 text-sm text-[var(--text-muted)]">{doc.uploadedBy}</td>
+                {loading ? (
+                  <tr><td colSpan="6" className="p-8 text-center text-[var(--text-muted)]">Loading documents...</td></tr>
+                ) : documents.length === 0 ? (
+                  <tr><td colSpan="6" className="p-8 text-center text-[var(--text-muted)]">No documents available.</td></tr>
+                ) : documents.map((doc) => (
+                  <tr key={doc._id} className="border-b border-[var(--border-color)] hover:bg-[var(--bg-main)] transition-colors">
+                    <td className="p-4">{getFileIcon(doc.mimetype?.includes('pdf') ? 'pdf' : doc.mimetype?.includes('spreadsheet') ? 'excel' : 'doc')}</td>
+                    <td className="p-4 font-medium text-[var(--text-main)]">{doc.title}</td>
+                    <td className="p-4 text-sm text-[var(--text-muted)]">{new Date(doc.createdAt).toLocaleDateString()}</td>
+                    <td className="p-4 text-sm text-[var(--text-muted)]">{doc.uploader?.name || 'Unknown'}</td>
                     <td className="p-4">
-                      <Badge variant={doc.status === 'Approved' ? 'success' : 'warning'}>{doc.status}</Badge>
+                      <Badge variant={doc.approvalStatus === 'Approved' ? 'success' : doc.approvalStatus === 'Rejected' ? 'danger' : 'warning'}>
+                        {doc.approvalStatus}
+                      </Badge>
                     </td>
                     <td className="p-4">
                       <div className="flex justify-end gap-2">
