@@ -1,16 +1,63 @@
-# React + Vite
+# ADRDE Agra - MAC Meeting Agenda Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A professional, enterprise-grade internal dashboard developed for ADRDE (DRDO). This system handles meeting agenda management, document workflows, letter dispatches, inventory tracking, and reporting. 
 
-Currently, two official plugins are available:
+## Tech Stack
+* **Frontend:** React (Vite), Tailwind CSS v4, Recharts, Lucide Icons
+* **Backend:** Node.js, Express.js, Socket.IO, Multer
+* **Database:** MongoDB Atlas (Mongoose)
+* **Auth:** JSON Web Tokens (JWT), bcrypt
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
+* **Enterprise Dashboard:** Real-time analytics, status metrics, and timeline charts.
+* **Meeting & Agenda Workflows:** Create, schedule, and track meeting workflows.
+* **Document Repository:** Secure Multer-based file uploads (PDF, DOCX, XLSX).
+* **Inventory Tracking:** Real-time asset counts and low-stock alerts.
+* **Dispatch/Letters:** Manage Incoming, Outgoing, and Drafted mail communications.
+* **Automated Reports:** Generate summary PDFs dynamically.
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Prerequisites
+- Node.js (v18+)
+- MongoDB Atlas cluster (with your IP whitelisted in Network Access)
 
-## Expanding the ESLint configuration
+### 2. Backend Setup
+1. Open a terminal and navigate to the backend folder:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure your environment variables in `backend/.env`:
+   ```env
+   PORT=5000
+   MONGODB_URI=mongodb+srv://<user>:<password>@cluster0...
+   JWT_SECRET=adrde_super_secret_jwt_key
+   ```
+4. Start the backend:
+   ```bash
+   npm run dev
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 3. Frontend Setup
+1. Open a separate terminal in the root folder (`ADRDE_AY`):
+   ```bash
+   npm install
+   ```
+2. Start the Vite development server:
+   ```bash
+   npm run dev
+   ```
+
+### 4. Admin Credentials
+Use the pre-seeded admin account to log in:
+* **Email:** `abhijeet@adrde.gov.in`
+* **Password:** `password123`
+
+## Deployment Guidelines
+- **Frontend (Vercel/Netlify):** Run `npm run build` to generate static files.
+- **Backend (Render/Heroku):** Deploy the `backend/` folder and attach standard environment variables.
+- Ensure the `api.js` base URL points to your deployed backend domain in production.

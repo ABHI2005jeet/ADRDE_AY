@@ -10,8 +10,10 @@ import CalendarView from './pages/CalendarView';
 import Timeline from './pages/Timeline';
 import Documents from './pages/Documents';
 import Profile from './pages/Profile';
-
 import Inbox from './pages/Inbox';
+import Letters from './pages/Letters';
+import Inventory from './pages/Inventory';
+import Reports from './pages/Reports';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -43,6 +45,9 @@ function App() {
         <Route path="documents" element={<Documents />} />
         <Route path="profile" element={<Profile />} />
         <Route path="inbox" element={<Inbox />} />
+        <Route path="letters/*" element={<Letters />} />
+        <Route path="inventory/*" element={<Inventory />} />
+        <Route path="reports/*" element={<Reports />} />
       </Route>
     </Routes>
   );
