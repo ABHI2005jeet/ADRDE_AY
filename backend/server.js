@@ -1,12 +1,14 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import connectDB from './config/db.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import authRoutes from './routes/authRoutes.js';
 import meetingRoutes from './routes/meetingRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
+import letterRoutes from './routes/letterRoutes.js';
+import inventoryRoutes from './routes/inventoryRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -24,6 +26,7 @@ export const io = new Server(httpServer, {
   }
 });
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,6 +36,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/meetings', meetingRoutes);
 app.use('/api/documents', documentRoutes);
+app.use('/api/letters', letterRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 // Socket.io
 io.on('connection', (socket) => {

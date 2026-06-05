@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
+import bcrypt from 'bcryptjs';
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
@@ -30,9 +32,10 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
   try {
+    const { email, password } = req.body;
     const user = await User.findOne({ email });
+
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
@@ -40,11 +43,34 @@ export const loginUser = async (req, res) => {
         email: user.email,
         role: user.role,
         department: user.department,
-        token: generateToken(user._id)
+        token: generateToken(user._id),
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
     }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, employeeId, newPassword } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.employeeId !== employeeId) {
+      return res.status(401).json({ message: 'Employee ID verification failed' });
+    }
+
+    // Rely on pre-save hook in User model to hash the password
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: 'Password reset successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
