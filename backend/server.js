@@ -10,6 +10,7 @@ import letterRoutes from './routes/letterRoutes.js';
 import inventoryRoutes from './routes/inventoryRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
