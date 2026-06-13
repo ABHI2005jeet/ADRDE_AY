@@ -42,8 +42,8 @@ const Letters = () => {
     }
   };
 
-  const filteredLetters = letters.filter(l => activeTab === 'All' || l.type === activeTab);
-  const [activeTab, setActiveTab] = useState('All');
+ // const filteredLetters = letters.filter(l => activeTab === 'All' || l.type === activeTab);
+ // const [activeTab, setActiveTab] = useState('All');
 
   const filteredLetters = letters.filter(l => activeTab === 'All' || l.type === activeTab);
 

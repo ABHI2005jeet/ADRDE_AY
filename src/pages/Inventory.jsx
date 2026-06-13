@@ -162,7 +162,6 @@ const Inventory = () => {
         </div>
       )}
     </div>
-  );
 };
 
 export default Inventory;
