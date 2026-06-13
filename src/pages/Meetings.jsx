@@ -14,6 +14,8 @@ const Meetings = () => {
   
   // Can create if Staff or Admin
   const canCreate = user?.role === 'Admin' || user?.role === 'Staff';
+  const isParaHead = user?.role === 'Para Head' || user?.role === 'Admin';
+  const isScientist = user?.role === 'Scientist' || user?.role === 'Admin';
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -104,6 +106,24 @@ const Meetings = () => {
                       <MapPin size={16} />
                       <span className="truncate">{meeting.venue}</span>
                     </div>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-[var(--border-color)] flex gap-2">
+                    {isParaHead && (meeting.status === 'Pending Approval' || meeting.status === 'Under Review') && (
+                      <>
+                        <Button variant="success" className="flex-1 py-1 text-xs">Approve</Button>
+                        <Button variant="danger" className="flex-1 py-1 text-xs">Reject</Button>
+                      </>
+                    )}
+                    {isScientist && meeting.status === 'Draft' && (
+                      <>
+                        <Button variant="primary" className="flex-1 py-1 text-xs">Review</Button>
+                        <Button variant="outline" className="flex-1 py-1 text-xs text-orange-600 border-orange-200 hover:bg-orange-50">Request Changes</Button>
+                      </>
+                    )}
+                    {!((isParaHead && (meeting.status === 'Pending Approval' || meeting.status === 'Under Review')) || (isScientist && meeting.status === 'Draft')) && (
+                      <Button variant="outline" className="w-full py-1 text-xs">View Details</Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>

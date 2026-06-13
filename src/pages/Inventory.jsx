@@ -1,25 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '../components/ui/Card';
-import { Package, Search, Plus, Filter, AlertTriangle } from 'lucide-react';
+import { Package, Search, Plus, Filter, AlertTriangle, X } from 'lucide-react';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
-
-const mockInventory = [
-  { id: 'INV-001', item: 'Dell Precision Workstations', category: 'IT Hardware', quantity: 15, location: 'Lab 3', status: 'In Stock' },
-  { id: 'INV-002', item: 'Aerospace Grade Aluminum', category: 'Raw Materials', quantity: 4, location: 'Warehouse A', status: 'Low Stock' },
-  { id: 'INV-003', item: 'Testing Multimeters', category: 'Electronics', quantity: 0, location: 'Lab 1', status: 'Out of Stock' },
-  { id: 'INV-004', item: 'Projector Screens', category: 'Office Supplies', quantity: 2, location: 'Conf Room', status: 'In Stock' },
-];
+import { getInventory, addInventory } from '../services/dataService';
 
 const Inventory = () => {
-  return (
+  const [inventory, setInventory] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [formData, setFormData] = useState({
+    itemId: '',
+    name: '',
+    category: '',
+    quantity: 0,
+    location: ''
+  });
+
+  useEffect(() => {
+    fetchInventory();
+  }, []);
+
+  const fetchInventory = async () => {
+    try {
+      const data = await getInventory();
+      setInventory(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAddItem = async (e) => {
+    e.preventDefault();
+    try {
+      await addInventory(formData);
+      setShowAddModal(false);
+      fetchInventory();
+    } catch (err) {
+      console.error(err);
+    }
+  };
     <div className="space-y-6 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--text-main)]">Inventory Management</h1>
           <p className="text-[var(--text-muted)]">Track IT assets, hardware, and raw materials.</p>
         </div>
-        <Button variant="primary" className="gap-2 shrink-0">
+        <Button variant="primary" className="gap-2 shrink-0" onClick={() => setShowAddModal(true)}>
           <Plus size={18} />
           Add Item
         </Button>
@@ -44,7 +70,7 @@ const Inventory = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Low Stock Alerts</p>
-              <h3 className="text-2xl font-bold text-gray-900">12</h3>
+              <h3 className="text-2xl font-bold text-gray-900">{inventory.filter(i => i.status === 'Low Stock' || i.status === 'Out of Stock').length}</h3>
             </div>
           </CardContent>
         </Card>
@@ -78,11 +104,11 @@ const Inventory = () => {
                 </tr>
               </thead>
               <tbody>
-                {mockInventory.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-100 hover:bg-blue-50/30 transition-colors cursor-pointer group">
+                {inventory.map((item) => (
+                  <tr key={item._id} className="border-b border-gray-100 hover:bg-blue-50/30 transition-colors cursor-pointer group">
                     <td className="px-6 py-4">
-                      <div className="font-medium text-gray-900 group-hover:text-blue-600">{item.item}</div>
-                      <div className="text-xs text-gray-500">{item.id}</div>
+                      <div className="font-medium text-gray-900 group-hover:text-blue-600">{item.name}</div>
+                      <div className="text-xs text-gray-500">{item.itemId}</div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">{item.category}</td>
                     <td className="px-6 py-4 text-sm text-gray-900 font-medium">{item.quantity}</td>
@@ -99,6 +125,42 @@ const Inventory = () => {
           </div>
         </CardContent>
       </Card>
+
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Add Inventory Item</h2>
+              <button onClick={() => setShowAddModal(false)}><X size={20} className="text-gray-500" /></button>
+            </div>
+            <form onSubmit={handleAddItem} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Item ID</label>
+                <input required type="text" className="w-full border rounded px-3 py-2" value={formData.itemId} onChange={e => setFormData({...formData, itemId: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <input required type="text" className="w-full border rounded px-3 py-2" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Category</label>
+                <input required type="text" className="w-full border rounded px-3 py-2" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Quantity</label>
+                <input required type="number" min="0" className="w-full border rounded px-3 py-2" value={formData.quantity} onChange={e => setFormData({...formData, quantity: parseInt(e.target.value)})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Location</label>
+                <input required type="text" className="w-full border rounded px-3 py-2" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} />
+              </div>
+              <div className="pt-2">
+                <Button type="submit" variant="primary" className="w-full">Save Item</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

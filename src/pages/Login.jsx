@@ -86,12 +86,20 @@ const Login = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full h-12 text-base" disabled={isLoading}>
-                {isLoading ? 'Signing In...' : 'Sign In'}
-              </Button>
+              <button 
+                type="submit" 
+                className="w-full bg-[#152B47] text-white py-2 rounded hover:bg-[#0B1727] transition-colors"
+              >
+                {isLoading ? 'Signing In...' : 'Login'}
+              </button>
               
-              <div className="text-center text-sm text-[var(--text-muted)] pt-2">
-                Don't have an account? <Link to="/register" className="text-[var(--color-primary-light)] hover:underline font-medium">Register here</Link>
+              <div className="flex justify-between items-center mt-4">
+                <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                  Forgot Password?
+                </Link>
+                <span className="text-sm text-gray-500">
+                  Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link>
+                </span>
               </div>
             </form>
           </CardContent>

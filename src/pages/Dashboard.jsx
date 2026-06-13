@@ -6,6 +6,7 @@ import {
   PieChart, Pie, Cell
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import { Link } from 'react-router-dom';
 
 const COLORS = ['#10b981', '#e5e7eb']; // Green for completed, Gray for remaining
 
@@ -25,6 +26,27 @@ const StatCard = ({ title, value, desc, icon: Icon, iconBg, iconColor }) => (
     </CardContent>
   </Card>
 );
+
+const lanShortcuts = [
+  { title: 'ADRDE Online Services', slug: 'adrde-online-services' },
+  { title: 'DRONA Services', slug: 'drona-services' },
+  { title: 'Downloads', slug: 'downloads' },
+  { title: 'Information Security', slug: 'information-security' },
+  { title: 'Miscellaneous Documents', slug: 'miscellaneous-documents' },
+  { title: 'Online TD', slug: 'online-td' },
+  { title: 'User Profile', slug: 'user-profile' },
+  { title: 'Notice Section', slug: 'notice-section' },
+  { title: 'AMC Complaint Portal', slug: 'amc-complaint-portal' },
+  { title: 'Lunch Booking', slug: 'lunch-booking' },
+  { title: 'Agenda For MAC Meeting', slug: 'agenda-for-mac-meeting' },
+  { title: 'DRONA Home', slug: 'drona-home' },
+  { title: 'DRONA E-Mail', slug: 'drona-email' },
+  { title: 'e-COP(PIS)', slug: 'e-cop-pis' },
+  { title: 'IMMS V2', slug: 'imms-v2' },
+  { title: 'Mayurpankh', slug: 'mayurpankh' },
+  { title: 'DRDO Directory', slug: 'drdo-directory' },
+  { title: 'CEPTAM Portal', slug: 'ceptam-portal' }
+];
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -119,15 +141,15 @@ const Dashboard = () => {
       </div>
 
       <div className="flex flex-wrap items-center gap-3 mt-4 mb-8">
-        <button className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm px-4 py-2 text-xs font-medium text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
+        <Link to="/calendar" className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm px-4 py-2 text-xs font-medium text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
           <Calendar size={14} /> Open Calendar
-        </button>
-        <button className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm px-4 py-2 text-xs font-medium text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
+        </Link>
+        <Link to="/timeline" className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm px-4 py-2 text-xs font-medium text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
           <List size={14} /> Open Timeline
-        </button>
-        <button className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm px-4 py-2 text-xs font-medium text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
+        </Link>
+        <Link to="/notifications" className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm px-4 py-2 text-xs font-medium text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
           <Bell size={14} /> View Notifications
-        </button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -184,6 +206,23 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
+      <div className="mt-8 mb-6">
+        <h2 className="text-xl font-bold text-[#0B1727] mb-4">ADRDE LAN Portal Shortcuts</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {lanShortcuts.map((shortcut) => (
+            <Link 
+              key={shortcut.slug} 
+              to={`/module/${shortcut.slug}`}
+              className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md hover:border-blue-300 transition-all group"
+            >
+              <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-3 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <Activity size={20} />
+              </div>
+              <span className="text-xs font-semibold text-[#0B1727]">{shortcut.title}</span>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

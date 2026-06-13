@@ -43,6 +43,27 @@ const Navbar = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+
+  const handleSearch = async (query) => {
+    setSearchQuery(query);
+    if (!query || query.length < 2) {
+      setSearchResults(null);
+      return;
+    }
+    try {
+      const userStr = localStorage.getItem('user');
+      const token = userStr ? JSON.parse(userStr).token : '';
+      const response = await fetch(`http://localhost:5000/api/search?query=${query}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await response.json();
+      setSearchResults(data.results);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -65,15 +86,38 @@ const Navbar = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3 relative">
           <div className="relative w-80">
             <input 
               type="text" 
               placeholder="Search portal..." 
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
               className="w-full bg-[#152B47] text-white border border-[#2A4365] rounded px-3 py-1.5 text-sm placeholder-[#647C9F] focus:outline-none focus:border-blue-400"
             />
           </div>
-          <button className="text-sm font-medium text-white hover:text-gray-300">Search</button>
+          <button onClick={() => handleSearch(searchQuery)} className="text-sm font-medium text-white hover:text-gray-300">Search</button>
+
+          {searchResults && (
+            <div className="absolute top-full left-0 mt-2 w-full bg-white text-gray-800 rounded shadow-lg max-h-96 overflow-y-auto border border-gray-200 z-50">
+              {['users', 'meetings', 'documents', 'letters', 'inventory'].map(category => (
+                searchResults[category]?.length > 0 && (
+                  <div key={category} className="p-2 border-b border-gray-100 last:border-0">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 px-2">{category}</p>
+                    {searchResults[category].map(item => (
+                      <div key={item._id} className="px-2 py-1.5 hover:bg-blue-50 cursor-pointer rounded text-sm">
+                        <p className="font-medium">{item.name || item.title || item.subject}</p>
+                        <p className="text-xs text-gray-500">{item.employeeId || item.status || item.documentType}</p>
+                      </div>
+                    ))}
+                  </div>
+                )
+              ))}
+              {Object.values(searchResults).every(arr => arr.length === 0) && (
+                <div className="p-4 text-center text-sm text-gray-500">No results found</div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Right Actions */}
@@ -102,9 +146,11 @@ const Navbar = () => {
                 <Link to="/profile" className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100">
                   <UserIcon size={16} /> Profile
                 </Link>
-                <Link to="/profile/settings" className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100">
-                  <Settings size={16} /> Settings
-                </Link>
+                {(user?.role === 'Admin' || user?.role === 'Para Head') && (
+                  <Link to="/admin-settings" className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100">
+                    <Settings size={16} /> Settings
+                  </Link>
+                )}
                 <div className="h-px bg-gray-200 my-1"></div>
                 <button onClick={logout} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                   <LogOut size={16} /> Logout

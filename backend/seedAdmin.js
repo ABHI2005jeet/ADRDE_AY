@@ -8,7 +8,7 @@ const seedAdmin = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     
-    const adminExists = await User.findOne({ email: 'abhijeet@adrde.gov.in' });
+    const adminExists = await User.findOne({ email: 'dhirendrakumar8594@gmail.com' });
     
     if (adminExists) {
       console.log('Admin already seeded.');
@@ -18,7 +18,7 @@ const seedAdmin = async () => {
     const adminUser = await User.create({
       name: 'Abhijeet Kumar',
       employeeId: 'ADMIN-001',
-      email: 'abhijeet@adrde.gov.in',
+      email: 'dhirendrakumar8594@gmail.com',
       password: 'password123', // Force change on actual prod
       role: 'Admin',
       department: 'Headquarters'

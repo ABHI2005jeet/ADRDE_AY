@@ -8,12 +8,14 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { 
     type: String, 
-    enum: ['Admin', 'Para Head', 'Scientist', 'Technical Engineer / Officer', 'Staff', 'Contractual Worker', 'Intern'],
+    enum: ['Admin', 'Para Head', 'Scientist', 'Technical Officer', 'Staff', 'Contractual Worker', 'Intern'],
     required: true 
   },
   department: { type: String, default: 'General' },
   contactInfo: { type: String, default: '' },
-  profileImage: { type: String, default: '' }
+  profileImage: { type: String, default: '' },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {

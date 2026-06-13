@@ -3,6 +3,8 @@ import { useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Meetings from './pages/Meetings';
 import Agendas from './pages/Agendas';
@@ -14,6 +16,10 @@ import Inbox from './pages/Inbox';
 import Letters from './pages/Letters';
 import Inventory from './pages/Inventory';
 import Reports from './pages/Reports';
+import ShortcutModule from './pages/ShortcutModule';
+import AdminSettings from './pages/AdminSettings';
+import Notifications from './pages/Notifications';
+import Users from './pages/Users';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
@@ -28,6 +34,8 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:resettoken" element={<ResetPassword />} />
       <Route
         path="/"
         element={
@@ -38,6 +46,7 @@ function App() {
       >
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="module/:moduleName" element={<ShortcutModule />} />
         <Route path="meetings" element={<Meetings />} />
         <Route path="agendas" element={<Agendas />} />
         <Route path="calendar" element={<CalendarView />} />
@@ -48,6 +57,9 @@ function App() {
         <Route path="letters/*" element={<Letters />} />
         <Route path="inventory/*" element={<Inventory />} />
         <Route path="reports/*" element={<Reports />} />
+        <Route path="notifications" element={<Notifications />} />
+        <Route path="users/*" element={<Users />} />
+        <Route path="admin-settings" element={<AdminSettings />} />
       </Route>
     </Routes>
   );

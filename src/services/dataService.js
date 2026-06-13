@@ -28,3 +28,23 @@ export const uploadDocument = async (formData) => {
   });
   return data;
 };
+
+export const getInventory = async () => {
+  const { data } = await api.get('/inventory');
+  return data;
+};
+
+export const addInventory = async (itemData) => {
+  const { data } = await api.post('/inventory', itemData);
+  return data;
+};
+
+export const getLetters = async () => {
+  const { data } = await api.get('/letters');
+  return data;
+};
+
+export const addLetter = async (letterData) => {
+  const { data } = await api.post('/letters', letterData);
+  return data;
+};

@@ -11,7 +11,7 @@ const inventorySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Auto-update status based on quantity
-inventorySchema.pre('save', function(next) {
+inventorySchema.pre('save', function() {
   if (this.quantity === 0) {
     this.status = 'Out of Stock';
   } else if (this.quantity < 5) {
@@ -19,7 +19,6 @@ inventorySchema.pre('save', function(next) {
   } else {
     this.status = 'In Stock';
   }
-  next();
 });
 
 export default mongoose.model('Inventory', inventorySchema);

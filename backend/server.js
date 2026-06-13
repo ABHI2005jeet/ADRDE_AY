@@ -8,6 +8,9 @@ import meetingRoutes from './routes/meetingRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
 import letterRoutes from './routes/letterRoutes.js';
 import inventoryRoutes from './routes/inventoryRoutes.js';
+import shortcutRoutes from './routes/shortcutRoutes.js';
+import searchRoutes from './routes/searchRoutes.js';
+import messageRoutes from './routes/messageRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
@@ -38,6 +41,9 @@ app.use('/api/meetings', meetingRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/letters', letterRoutes);
 app.use('/api/inventory', inventoryRoutes);
+app.use('/api/shortcuts', shortcutRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Socket.io
 io.on('connection', (socket) => {

@@ -128,7 +128,7 @@ const Register = () => {
                 >
                   <option value="Para Head">Para Head</option>
                   <option value="Scientist">Scientist</option>
-                  <option value="Technical Engineer / Officer">Technical Engineer / Officer</option>
+                  <option value="Technical Officer">Technical Officer</option>
                   <option value="Staff">Staff</option>
                   <option value="Contractual Worker">Contractual Worker</option>
                   <option value="Intern">Intern</option>
