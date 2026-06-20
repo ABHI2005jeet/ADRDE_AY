@@ -108,7 +108,7 @@ const Documents = () => {
                           size="sm" 
                           variant="ghost" 
                           title="Download"
-                          onClick={() => handleDownload(doc.name)}
+                          onClick={() => handleDownload(doc.title || 'Document')}
                         >
                           <Download size={16} />
                         </Button>

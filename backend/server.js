@@ -11,6 +11,7 @@ import inventoryRoutes from './routes/inventoryRoutes.js';
 import shortcutRoutes from './routes/shortcutRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import moduleRoutes from './routes/moduleRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
@@ -43,6 +44,7 @@ app.use('/api/letters', letterRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/shortcuts', shortcutRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/modules', moduleRoutes);
 app.use('/api/messages', messageRoutes);
 
 // Socket.io

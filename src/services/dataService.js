@@ -48,3 +48,13 @@ export const addLetter = async (letterData) => {
   const { data } = await api.post('/letters', letterData);
   return data;
 };
+
+export const getModuleEntries = async (moduleName) => {
+  const { data } = await api.get(`/modules/${moduleName}`);
+  return data;
+};
+
+export const addModuleEntry = async (moduleName, entryData) => {
+  const { data } = await api.post(`/modules/${moduleName}`, entryData);
+  return data;
+};
